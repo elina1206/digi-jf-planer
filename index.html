@@ -14,12 +14,13 @@
     --green: #1A7A4A; --green-bg: #EAF5EE;
     --amber: #8A5A00; --amber-bg: #FEF3DC;
     --red: #C0392B; --red-bg: #FDECEA;
+    --purple: #5A3FC0; --purple-bg: #F0EEFE;
     --radius: 10px; --radius-sm: 6px;
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-  .shell { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .shell { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
   .header { margin-bottom: 2rem; }
-  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
   .brand { display: flex; align-items: center; gap: 12px; }
   .brand-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
   .brand h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.4px; }
@@ -27,12 +28,12 @@
   .week-nav { display: flex; align-items: center; gap: 8px; }
   .nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text2); transition: all 0.15s; }
   .nav-btn:hover { border-color: var(--border2); color: var(--text); }
-  .week-pill { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 13px; font-weight: 500; white-space: nowrap; min-width: 170px; text-align: center; }
+  .week-pill { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 13px; font-weight: 500; white-space: nowrap; min-width: 180px; text-align: center; }
   .week-pill span { color: var(--text2); font-weight: 400; margin-left: 4px; font-family: 'DM Mono', monospace; font-size: 11px; }
-  .meta-bar { display: flex; align-items: center; gap: 10px; margin-top: 1.25rem; flex-wrap: wrap; }
-  .meta-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+  .meta-bar { display: flex; align-items: center; gap: 8px; margin-top: 1.25rem; flex-wrap: wrap; }
+  .meta-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
   .chip-woran { background: var(--accent-bg); color: var(--accent); }
-  .chip-eis { background: #F0EEFE; color: #5A3FC0; }
+  .chip-eis { background: var(--purple-bg); color: var(--purple); }
   .chip-teamer { background: var(--amber-bg); color: var(--amber); }
   .chip-info { background: var(--surface2); color: var(--text2); font-weight: 400; }
   .holiday-banner { background: var(--amber-bg); border: 1px solid #F0D080; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--amber); display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; }
@@ -41,13 +42,24 @@
   .mod-input { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); width: 200px; }
   .mod-input:focus { outline: none; border-color: var(--accent); }
   .mod-input::placeholder { color: var(--text3); }
-  .time-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .time-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
   .time-label { font-size: 12px; color: var(--text2); white-space: nowrap; }
   .time-track { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-  .time-fill { height: 5px; border-radius: 3px; background: var(--accent); transition: width 0.4s ease; }
+  .time-fill { height: 5px; border-radius: 3px; background: var(--accent); transition: width 0.4s; }
   .time-fill.warn { background: #E8921A; }
   .time-fill.over { background: var(--red); }
   .time-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); white-space: nowrap; }
+
+  /* Monthly slot picker */
+  .monthly-section { margin-bottom: 1.5rem; }
+  .monthly-label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .monthly-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+  .monthly-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+  .monthly-btn:hover:not(.used):not(.active) { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+  .monthly-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+  .monthly-btn.used { background: var(--surface2); color: var(--text3); border-color: var(--border); cursor: not-allowed; text-decoration: line-through; }
+  .monthly-btn.used .used-label { font-size: 10px; color: var(--text3); margin-left: 2px; }
+
   .agenda-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
   .agenda-card-header { display: grid; grid-template-columns: 32px 1fr 90px 110px 36px; padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); }
   .agenda-card-header span { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -57,6 +69,7 @@
   .slot-row.p2 { background: #FAFAF8; }
   .slot-row.hidden-slot { opacity: 0.3; }
   .slot-row.agenda-row { background: var(--surface2); }
+  .slot-row.monthly-active { background: #F8F6FF; border-left: 3px solid var(--purple); }
   .prio-dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; margin-top: 1px; }
   .prio-dot.p1 { background: var(--accent-bg); color: var(--accent); }
   .prio-dot.p2 { background: var(--green-bg); color: var(--green); }
@@ -66,9 +79,9 @@
   .slot-hidden-label { font-size: 11px; color: var(--text3); font-style: italic; }
   .inline-form { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
   .il-input { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); }
-  .il-input.topic { width: 155px; }
+  .il-input.topic { width: 150px; }
   .il-input.ref-i { width: 85px; }
-  .il-input.notes-i { width: 130px; }
+  .il-input.notes-i { width: 120px; }
   .il-input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
   .il-input::placeholder { color: var(--text3); }
   .il-save { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; padding: 4px 10px; background: var(--text); color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; }
@@ -79,7 +92,7 @@
   .ref-cell.assigned { color: var(--text); font-weight: 500; }
   .ref-cell.open { color: #C07000; font-style: italic; }
   .action-cell { display: flex; flex-direction: column; gap: 3px; align-items: center; padding-top: 1px; }
-  .ic-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text3); font-size: 13px; transition: all 0.1s; }
+  .ic-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text3); font-size: 13px; }
   .ic-btn:hover { background: var(--surface2); color: var(--text2); }
   .ic-btn.del:hover { background: var(--red-bg); color: var(--red); }
   .bottom-bar { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -93,7 +106,6 @@
   .preview-box.visible { display: block; }
   .preview-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
   .preview-text { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--text2); white-space: pre-wrap; line-height: 1.8; }
-  .notes-col { font-size: 12px; color: var(--text2); padding-top: 2px; font-style: italic; }
   svg.icon { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
 </style>
 </head>
@@ -110,7 +122,7 @@
       </div>
       <div class="week-nav">
         <button class="nav-btn" onclick="changeWeek(-1)">&#8249;</button>
-        <div class="week-pill" id="week-pill">– <span></span></div>
+        <div class="week-pill" id="week-pill">–</div>
         <button class="nav-btn" onclick="changeWeek(1)">&#8250;</button>
       </div>
     </div>
@@ -132,6 +144,12 @@
       <span class="time-num">45 Min. max</span>
     </div>
 
+    <!-- Monthly slot picker -->
+    <div class="monthly-section">
+      <div class="monthly-label">Monatlicher Slot auswählen <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3);">(je 1× pro Monat)</span></div>
+      <div class="monthly-grid" id="monthly-grid"></div>
+    </div>
+
     <div class="agenda-card">
       <div class="agenda-card-header">
         <span>Prio</span><span>Thema</span><span>Dauer</span><span>Referent:in</span><span></span>
@@ -149,7 +167,6 @@
         Vorschau
       </button>
     </div>
-
     <div class="preview-box" id="preview-box">
       <div class="preview-label">Vorschau – exakt so wird es kopiert</div>
       <div class="preview-text" id="preview-text"></div>
@@ -160,7 +177,9 @@
 <script>
 const HOLIDAYS={"2025-01-01":"Neujahr","2025-04-18":"Karfreitag","2025-04-21":"Ostermontag","2025-05-01":"Tag der Arbeit","2025-05-29":"Christi Himmelfahrt","2025-06-09":"Pfingstmontag","2025-06-19":"Fronleichnam","2025-10-03":"Tag der Deutschen Einheit","2025-11-01":"Allerheiligen","2025-12-25":"1. Weihnachtstag","2025-12-26":"2. Weihnachtstag","2026-01-01":"Neujahr","2026-04-03":"Karfreitag","2026-04-06":"Ostermontag","2026-05-01":"Tag der Arbeit","2026-05-14":"Christi Himmelfahrt","2026-05-25":"Pfingstmontag","2026-06-04":"Fronleichnam","2026-10-03":"Tag der Deutschen Einheit","2026-11-01":"Allerheiligen","2026-12-25":"1. Weihnachtstag","2026-12-26":"2. Weihnachtstag","2027-01-01":"Neujahr","2027-03-26":"Karfreitag","2027-03-29":"Ostermontag","2027-05-01":"Tag der Arbeit","2027-05-06":"Christi Himmelfahrt","2027-05-17":"Pfingstmontag","2027-05-27":"Fronleichnam","2027-10-03":"Tag der Deutschen Einheit","2027-11-01":"Allerheiligen","2027-12-25":"1. Weihnachtstag","2027-12-26":"2. Weihnachtstag"};
 const WORAN_ANCHOR=new Date('2026-06-11');
+
 function toKey(d){return d.toISOString().split('T')[0];}
+function monthKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
 function isHoliday(d){return HOLIDAYS[toKey(d)]||null;}
 function isWoranWeek(d){return Math.round((d-WORAN_ANCHOR)/(7*24*3600*1000))%2===0;}
 function getKW(d){const j=new Date(d.getFullYear(),0,4);const s=new Date(j);s.setDate(j.getDate()-((j.getDay()+6)%7));return Math.floor((d-s)/(7*86400000))+1;}
@@ -168,153 +187,154 @@ function getNextThursday(from){const d=new Date(from);d.setHours(0,0,0,0);const 
 function parseDur(s){if(!s)return 10;const m=s.match(/(\d+)/g);if(m&&m.length>=2)return Math.round((parseInt(m[0])+parseInt(m[1]))/2);if(m)return parseInt(m[0]);return 10;}
 function getThursdaysInMonth(y,mo){const out=[];const d=new Date(y,mo,1);while(d.getDay()!==4)d.setDate(d.getDate()+1);while(d.getMonth()===mo){if(!HOLIDAYS[toKey(d)])out.push(new Date(d));d.setDate(d.getDate()+7);}return out;}
 function isTeamerfolg(d){const ts=getThursdaysInMonth(d.getFullYear(),d.getMonth());return ts.length>=2&&toKey(ts[1])===toKey(d);}
+function formatDateConfluence(d){const day=DAYS[d.getDay()];const dd=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const yy=String(d.getFullYear()).slice(2);return `${day}, ${dd}.${mm}.${yy} (KW ${getKW(d)})`;}
 
-// Slot definitions — export text matches Confluence format exactly
-const SLOTS={
-  woran:        {prio:1, name:'👩‍💼 Woran arbeitest Du gerade? (1 Thema) | Was ist die Herausforderung? | Was ist der Mehrwert am Ende?', dur:'10-15 Min.', ref:'Alle', note:'', editable:false},
-  eisbrecher:   {prio:1, name:'🎮 Eisbrecher-Game', dur:'10-15 Min.', ref:'Alle', note:'', editable:false},
-  teamerfolg:   {prio:1, name:'🏆 Teamerfolg', dur:'10-15 Min.', ref:'Alle', note:'', editable:false, hasMonth:true},
-  anforderungen:{prio:1, name:'✨ Neue Anforderungen', dur:'5-10 Min.', ref:'Alle', note:'', editable:false},
-  deepdive:     {prio:2, name:'🤿 Deep Dive', dur:'10 Min.', ref:'', note:'', editable:true},
-  platzhalter:  {prio:2, name:'▶️ Platzhalter für Zukunftsthemen / Special Guest / Scheiter-Show / Learning des Monats / Best Practice', dur:'ca. 10 Min.', ref:'', note:'', editable:true},
+// Fixed slots (always appear)
+const FIXED_SLOTS={
+  woran:        {prio:1,name:'👩‍💼 Woran arbeitest Du gerade? (1 Thema) | Was ist die Herausforderung? | Was ist der Mehrwert am Ende?',dispName:'👩‍💼 Woran arbeitest Du gerade?',dur:'10-15 Min.',ref:'Alle',editable:false},
+  eisbrecher:   {prio:1,name:'🎮 Eisbrecher-Game',dispName:'🎮 Eisbrecher-Game',dur:'10-15 Min.',ref:'Alle',editable:false},
+  teamerfolg:   {prio:1,name:'🏆 Teamerfolg',dispName:'🏆 Teamerfolg',dur:'10-15 Min.',ref:'Alle',editable:false,hasMonth:true},
+  anforderungen:{prio:1,name:'✨ Neue Anforderungen',dispName:'✨ Neue Anforderungen',dur:'5-10 Min.',ref:'Alle',editable:false},
+  deepdive:     {prio:2,name:'🤿 Deep Dive',dispName:'🤿 Deep Dive',dur:'10 Min.',ref:'',editable:true},
 };
 
-// Display names (shorter, for the tool UI only)
-const SLOT_DISPLAY={
-  woran:'👩‍💼 Woran arbeitest Du gerade?',
-  eisbrecher:'🎮 Eisbrecher-Game',
-  teamerfolg:'🏆 Teamerfolg',
-  anforderungen:'✨ Neue Anforderungen',
-  deepdive:'🤿 Deep Dive',
-  platzhalter:'▶️ Platzhalter',
-};
+// Monthly optional slots — one per month each
+const MONTHLY_SLOTS=[
+  {id:'learning',  emoji:'💡',name:'Learning des Monats',   exportName:'💡 Learning des Monats',   dur:'ca. 10 Min.',prio:2},
+  {id:'zukunft',   emoji:'🤖',name:'Zukunftsthemen',        exportName:'🤖 Zukunftsthemen',        dur:'10-15 Min.',prio:2},
+  {id:'guest',     emoji:'👑',name:'Special Guest Deep Dive',exportName:'👑 Special Guest Deep Dive',dur:'5-10 Min.',prio:2},
+  {id:'scheiter',  emoji:'🎬',name:'Scheiter-Show',          exportName:'🎬 Scheiter-Show',          dur:'5-10 Min.',prio:2},
+  {id:'best',      emoji:'💎',name:'Best Practice',          exportName:'💎 Best Practice',          dur:'5-10 Min.',prio:2},
+];
 
-function getSlotsForDate(d){
-  const s=[];
-  s.push(isWoranWeek(d)?'woran':'eisbrecher');
-  if(isTeamerfolg(d))s.push('teamerfolg');
-  s.push('anforderungen','deepdive','platzhalter','__agenda__');
-  return s;
-}
+// localStorage helpers
+const LS_KEY='digi_jf_v1';
+function loadState(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return {};}}
+function saveState(s){try{localStorage.setItem(LS_KEY,JSON.stringify(s));}catch(e){}}
+
+// State: weekData[weekKey] = {mod, hidden:{}, slots:{}, monthlySlot: id|null, monthlyData:{topic,ref,notes}}
+// monthlyUsed[monthKey] = slotId  (which monthly slot was used this month)
+let state=loadState();
+function getWeekState(wk){if(!state[wk])state[wk]={mod:'',hidden:{},slots:{},monthlySlot:null,monthlyData:{topic:'',ref:'',notes:''}};return state[wk];}
+function getMonthlyUsed(mk){return state['_monthly_'+mk]||null;}
+function setMonthlyUsed(mk,slotId,wk){state['_monthly_'+mk]=slotId?{slotId,weekKey:wk}:null;saveState(state);}
 
 let cur=getNextThursday(new Date());
-let slotData={};
-let moderator='';
 let previewOpen=false;
-
-function getSlot(id){if(!slotData[id])slotData[id]={topic:'',ref:'',notes:'',assigned:false,hidden:false,month:''};return slotData[id];}
-
-function changeWeek(dir){
-  cur=new Date(cur);cur.setDate(cur.getDate()+dir*7);
-  slotData={};moderator='';
-  render();
-}
 
 const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const MONTHS_S=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sept.','Okt.','Nov.','Dez.'];
 const DAYS=['So','Mo','Di','Mi','Do','Fr','Sa'];
 
-// Format date exactly like Confluence: "Donnerstag, 10.06.26 (KW 24)"
-function formatDateConfluence(d){
-  const day=DAYS[d.getDay()];
-  const dd=String(d.getDate()).padStart(2,'0');
-  const mm=String(d.getMonth()+1).padStart(2,'0');
-  const yy=String(d.getFullYear()).slice(2);
-  const kw=getKW(d);
-  return `${day}, ${dd}.${mm}.${yy} (KW ${kw})`;
+function changeWeek(dir){cur=new Date(cur);cur.setDate(cur.getDate()+dir*7);render();}
+
+function selectMonthlySlot(slotId){
+  const wk=toKey(cur);const mk=monthKey(cur);
+  const ws=getWeekState(wk);
+  const used=getMonthlyUsed(mk);
+  // If already used in another week, don't allow
+  if(used&&used.weekKey!==wk&&used.slotId===slotId)return;
+  // Toggle: if already selected this week, deselect
+  if(ws.monthlySlot===slotId){
+    ws.monthlySlot=null;ws.monthlyData={topic:'',ref:'',notes:''};
+    setMonthlyUsed(mk,null,wk);
+  } else {
+    ws.monthlySlot=slotId;ws.monthlyData={topic:'',ref:'',notes:''};
+    setMonthlyUsed(mk,slotId,wk);
+  }
+  saveState(state);render();
+}
+
+function saveMonthlyData(wk){
+  const ws=getWeekState(wk);
+  const t=document.getElementById('mt-topic');const r=document.getElementById('mt-ref');const n=document.getElementById('mt-notes');
+  if(t)ws.monthlyData.topic=t.value.trim();
+  if(r)ws.monthlyData.ref=r.value.trim();
+  if(n)ws.monthlyData.notes=n.value.trim();
+  saveState(state);render();
 }
 
 function saveSlot(id){
-  const t=document.getElementById('it-'+id);
-  const r=document.getElementById('ir-'+id);
-  const n=document.getElementById('in-'+id);
+  const wk=toKey(cur);const ws=getWeekState(wk);
+  const t=document.getElementById('it-'+id);const r=document.getElementById('ir-'+id);const n=document.getElementById('in-'+id);
   const mo=document.getElementById('im-'+id);
   if(!t||!t.value.trim()){if(t)t.focus();return;}
-  slotData[id]={topic:t.value.trim(),ref:r?r.value.trim():'',notes:n?n.value.trim():'',assigned:true,hidden:false,month:mo?mo.value.trim():''};
-  render();
+  ws.slots[id]={topic:t.value.trim(),ref:r?r.value.trim():'',notes:n?n.value.trim():'',month:mo?mo.value.trim():'',assigned:true};
+  saveState(state);render();
 }
-function clearSlot(id){slotData[id]={topic:'',ref:'',notes:'',assigned:false,hidden:false,month:''};render();}
-function toggleHide(id){const sd=getSlot(id);if(sd.hidden){sd.hidden=false;}else{sd.hidden=true;sd.assigned=false;sd.topic='';sd.ref='';sd.notes='';sd.month='';}render();}
+function clearSlot(id){const wk=toKey(cur);const ws=getWeekState(wk);ws.slots[id]={assigned:false,topic:'',ref:'',notes:'',month:''};saveState(state);render();}
+function toggleHide(id){const wk=toKey(cur);const ws=getWeekState(wk);ws.hidden[id]=!ws.hidden[id];if(ws.hidden[id]){ws.slots[id]={assigned:false,topic:'',ref:'',notes:'',month:''};}saveState(state);render();}
 
 function render(){
-  const d=cur;const key=toKey(d);const kw=getKW(d);const holiday=isHoliday(d);
+  const d=cur;const wk=toKey(d);const kw=getKW(d);const holiday=isHoliday(d);
+  const mk=monthKey(d);
+  const ws=getWeekState(wk);
   const woran=isWoranWeek(d);const teamer=isTeamerfolg(d);
   const thursdays=getThursdaysInMonth(d.getFullYear(),d.getMonth());
-  const idx=thursdays.findIndex(t=>toKey(t)===key);
+  const idx=thursdays.findIndex(t=>toKey(t)===wk);
 
   document.getElementById('week-pill').innerHTML=
     `${DAYS[d.getDay()]}, ${d.getDate()}. ${MONTHS_S[d.getMonth()]} ${d.getFullYear()} <span>KW ${kw}</span>`;
-
   document.getElementById('meta-bar').innerHTML=`
     <span class="meta-chip ${woran?'chip-woran':'chip-eis'}">${woran?'👩‍💼 Woran-Woche':'🎮 Eisbrecher-Woche'}</span>
     ${teamer?'<span class="meta-chip chip-teamer">🏆 Teamerfolg diese Woche</span>':''}
-    <span class="meta-chip chip-info">Do ${idx+1} von ${thursdays.length} im ${MONTHS[d.getMonth()]}</span>
-  `;
+    <span class="meta-chip chip-info">Do ${idx+1} von ${thursdays.length} im ${MONTHS[d.getMonth()]}</span>`;
 
   const hb=document.getElementById('holiday-banner');const mc=document.getElementById('main-content');
   if(holiday){hb.style.display='flex';document.getElementById('holiday-name').textContent=holiday;mc.style.opacity='0.4';mc.style.pointerEvents='none';}
   else{hb.style.display='none';mc.style.opacity='1';mc.style.pointerEvents='';}
 
-  const modEl=document.getElementById('mod-input');modEl.value=moderator;modEl.oninput=e=>{moderator=e.target.value;};
+  const modEl=document.getElementById('mod-input');modEl.value=ws.mod||'';
+  modEl.oninput=e=>{ws.mod=e.target.value;saveState(state);};
 
-  const slots=getSlotsForDate(d);
+  // Render monthly slot picker
+  const used=getMonthlyUsed(mk);
+  const grid=document.getElementById('monthly-grid');
+  grid.innerHTML=MONTHLY_SLOTS.map(ms=>{
+    const isActive=ws.monthlySlot===ms.id;
+    const isUsedElsewhere=used&&used.slotId===ms.id&&used.weekKey!==wk;
+    let cls='monthly-btn';
+    if(isActive)cls+=' active';
+    else if(isUsedElsewhere)cls+=' used';
+    const usedLabel=isUsedElsewhere?`<span class="used-label">(bereits ${MONTHS_S[d.getMonth()]})</span>`:'';
+    return `<button class="${cls}" onclick="selectMonthlySlot('${ms.id}')" ${isUsedElsewhere?'disabled':''}>
+      ${ms.emoji} ${ms.name}${usedLabel}
+    </button>`;
+  }).join('');
+
+  // Build agenda rows
   const body=document.getElementById('agenda-body');body.innerHTML='';
   let total=0;
 
-  slots.forEach(id=>{
-    if(id==='__agenda__'){
-      const row=document.createElement('div');row.className='slot-row agenda-row';
-      row.innerHTML=`<div></div><div class="slot-content"><div class="slot-title" style="color:var(--text3);font-weight:400;">📓 Agenda-Planung</div><div class="slot-sub">nur wenn Agenda leer – für nächste 2–3 Wochen</div></div><div></div><div></div><div></div>`;
-      body.appendChild(row);return;
-    }
-    const info=SLOTS[id];const sd=getSlot(id);
-    if(!sd.hidden)total+=parseDur(info.dur);
+  // Fixed slots order
+  const fixedOrder=[];
+  fixedOrder.push(woran?'woran':'eisbrecher');
+  if(teamer)fixedOrder.push('teamerfolg');
+  fixedOrder.push('anforderungen','deepdive');
 
-    let contentHTML='',refHTML='',actionHTML='';
-    const dispName=SLOT_DISPLAY[id];
-
-    if(sd.hidden){
-      contentHTML=`<div class="slot-title slot-hidden-label">${dispName} — ausgeblendet</div>`;
-      refHTML='<div></div>';
-      actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Einblenden">👁</button>`;
-    } else if(sd.assigned){
-      // show full export name + topic for teamerfolg/deepdive
-      const displayFull = (id==='teamerfolg'&&sd.month) ? `${dispName} für den Monat ${sd.month}` :
-                          (id==='deepdive'&&sd.topic) ? `${dispName}: ${sd.topic}` :
-                          sd.topic ? `${dispName}: ${sd.topic}` : dispName;
-      contentHTML=`<div class="slot-title">${displayFull}</div>`;
-      if(sd.notes)contentHTML+=`<div class="slot-sub">${sd.notes}</div>`;
-      refHTML=`<div class="ref-cell assigned">${sd.ref||info.ref||'—'}</div>`;
-      actionHTML=`
-        <button class="ic-btn del" onclick="clearSlot('${id}')" title="Entfernen">✕</button>
-        <button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
-    } else if(info.editable){
-      // Teamerfolg gets a "Monat" field; others get topic + ref + notes
-      const extraField = id==='teamerfolg'
-        ? `<input class="il-input ref-i" id="im-${id}" placeholder="Monat (z.B. Mai)" />`
-        : `<input class="il-input topic" id="it-${id}" placeholder="Thema…" />
-           <input class="il-input ref-i" id="ir-${id}" placeholder="Referent:in" />
-           <input class="il-input notes-i" id="in-${id}" placeholder="Anmerkungen" />`;
-      contentHTML=`<div class="slot-title">${dispName}</div><div class="slot-sub">${info.note||''}</div>
-        <div class="inline-form">${extraField}<button class="il-save" onclick="saveSlot('${id}')">Eintragen</button></div>`;
-      refHTML=`<div class="ref-cell open">offen</div>`;
-      actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
-    } else {
-      contentHTML=`<div class="slot-title">${dispName}</div>`;
-      refHTML=`<div class="ref-cell">${info.ref||''}</div>`;
-      actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
-    }
-
-    const row=document.createElement('div');
-    row.className=`slot-row p${info.prio}${sd.hidden?' hidden-slot':''}`;
-    row.innerHTML=`
-      <div><div class="prio-dot p${info.prio}">${info.prio}</div></div>
-      <div class="slot-content">${contentHTML}</div>
-      <div class="dur-cell">${sd.hidden?'':info.dur}</div>
-      ${refHTML}
-      <div class="action-cell">${actionHTML}</div>`;
-    body.appendChild(row);
+  fixedOrder.forEach(id=>{
+    const info=FIXED_SLOTS[id];
+    const sd=ws.slots[id]||{assigned:false,topic:'',ref:'',notes:'',month:''};
+    const hidden=ws.hidden[id]||false;
+    if(!hidden)total+=parseDur(info.dur);
+    renderSlotRow(body,id,info.prio,info.dispName||info.name,info.dur,info.ref||'',info.editable||false,sd,hidden,wk,false);
   });
+
+  // Monthly selected slot
+  if(ws.monthlySlot){
+    const ms=MONTHLY_SLOTS.find(m=>m.id===ws.monthlySlot);
+    if(ms){
+      const hidden=ws.hidden['__monthly__']||false;
+      if(!hidden)total+=parseDur(ms.dur);
+      const md=ws.monthlyData||{topic:'',ref:'',notes:''};
+      renderMonthlyRow(body,ms,md,hidden,wk);
+    }
+  }
+
+  // Agenda row
+  const agRow=document.createElement('div');agRow.className='slot-row agenda-row';
+  agRow.innerHTML=`<div></div><div class="slot-content"><div class="slot-title" style="color:var(--text3);font-weight:400;">📓 Agenda-Planung</div><div class="slot-sub">nur wenn Agenda leer – für nächste 2–3 Wochen</div></div><div></div><div></div><div></div>`;
+  body.appendChild(agRow);
 
   const pct=Math.min(Math.round((total/45)*100),100);
   const fill=document.getElementById('time-fill');fill.style.width=pct+'%';
@@ -323,51 +343,119 @@ function render(){
   if(previewOpen)updatePreview();
 }
 
-// Build export text exactly matching Confluence format
+function renderSlotRow(body,id,prio,dispName,dur,defaultRef,editable,sd,hidden,wk,isMonthly){
+  let contentHTML='',refHTML='',actionHTML='';
+  if(hidden){
+    contentHTML=`<div class="slot-title slot-hidden-label">${dispName} — ausgeblendet</div>`;
+    refHTML='<div></div>';
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Einblenden">👁</button>`;
+  } else if(sd.assigned){
+    const displayTitle=(id==='deepdive'&&sd.topic)?`${dispName}: ${sd.topic}`:(id==='teamerfolg'&&sd.month)?`${dispName} für den Monat ${sd.month}`:sd.topic?`${dispName}: ${sd.topic}`:dispName;
+    contentHTML=`<div class="slot-title">${displayTitle}</div>`;
+    if(sd.notes)contentHTML+=`<div class="slot-sub">${sd.notes}</div>`;
+    refHTML=`<div class="ref-cell assigned">${sd.ref||defaultRef||'—'}</div>`;
+    actionHTML=`<button class="ic-btn del" onclick="clearSlot('${id}')" title="Entfernen">✕</button>
+      <button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+  } else if(editable){
+    const extraField=id==='teamerfolg'
+      ?`<input class="il-input ref-i" id="im-${id}" placeholder="Monat (z.B. Mai)" />`
+      :`<input class="il-input topic" id="it-${id}" placeholder="Thema…" />
+        <input class="il-input ref-i" id="ir-${id}" placeholder="Referent:in" />
+        <input class="il-input notes-i" id="in-${id}" placeholder="Anmerkungen" />`;
+    contentHTML=`<div class="slot-title">${dispName}</div>
+      <div class="inline-form">${extraField}<button class="il-save" onclick="saveSlot('${id}')">Eintragen</button></div>`;
+    refHTML=`<div class="ref-cell open">offen</div>`;
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+  } else {
+    contentHTML=`<div class="slot-title">${dispName}</div>`;
+    refHTML=`<div class="ref-cell">${defaultRef}</div>`;
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+  }
+  const row=document.createElement('div');
+  row.className=`slot-row p${prio}${hidden?' hidden-slot':''}`;
+  row.innerHTML=`<div><div class="prio-dot p${prio}">${prio}</div></div>
+    <div class="slot-content">${contentHTML}</div>
+    <div class="dur-cell">${hidden?'':dur}</div>
+    ${refHTML}
+    <div class="action-cell">${actionHTML}</div>`;
+  body.appendChild(row);
+}
+
+function renderMonthlyRow(body,ms,md,hidden,wk){
+  let contentHTML='',refHTML='',actionHTML='';
+  if(hidden){
+    contentHTML=`<div class="slot-title slot-hidden-label">${ms.emoji} ${ms.name} — ausgeblendet</div>`;
+    refHTML='<div></div>';
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('__monthly__')" title="Einblenden">👁</button>`;
+  } else if(md.topic||md.ref){
+    contentHTML=`<div class="slot-title">${ms.exportName}${md.topic?': '+md.topic:''}</div>`;
+    if(md.notes)contentHTML+=`<div class="slot-sub">${md.notes}</div>`;
+    refHTML=`<div class="ref-cell assigned">${md.ref||'—'}</div>`;
+    actionHTML=`<button class="ic-btn del" onclick="clearMonthly('${wk}')" title="Entfernen">✕</button>
+      <button class="ic-btn" onclick="toggleHide('__monthly__')" title="Ausblenden">🙈</button>`;
+  } else {
+    contentHTML=`<div class="slot-title">${ms.exportName}</div>
+      <div class="inline-form">
+        <input class="il-input topic" id="mt-topic" placeholder="Thema (optional)…" />
+        <input class="il-input ref-i" id="mt-ref" placeholder="Referent:in" />
+        <input class="il-input notes-i" id="mt-notes" placeholder="Anmerkungen" />
+        <button class="il-save" onclick="saveMonthlyData('${wk}')">Eintragen</button>
+      </div>`;
+    refHTML=`<div class="ref-cell open">offen</div>`;
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('__monthly__')" title="Ausblenden">🙈</button>`;
+  }
+  const row=document.createElement('div');
+  row.className=`slot-row p2 monthly-active${hidden?' hidden-slot':''}`;
+  row.innerHTML=`<div><div class="prio-dot p2">2</div></div>
+    <div class="slot-content">${contentHTML}</div>
+    <div class="dur-cell">${hidden?'':ms.dur}</div>
+    ${refHTML}
+    <div class="action-cell">${actionHTML}</div>`;
+  body.appendChild(row);
+}
+
+function clearMonthly(wk){
+  const ws=getWeekState(wk);ws.monthlyData={topic:'',ref:'',notes:''};saveState(state);render();
+}
+
 function buildText(){
-  const d=cur;
-  const header=`${formatDateConfluence(d)} - Moderation: ${moderator||'___'}`;
-  const slots=getSlotsForDate(d);
+  const d=cur;const wk=toKey(d);const ws=getWeekState(wk);
+  let rows=[`${formatDateConfluence(d)} - Moderation: ${ws.mod||'___'}`,'','Priorität\tThemen\tDauer\tReferent:in\tAnmerkungen'];
+  const woran=isWoranWeek(d);const teamer=isTeamerfolg(d);
+  const fixedOrder=[];
+  fixedOrder.push(woran?'woran':'eisbrecher');
+  if(teamer)fixedOrder.push('teamerfolg');
+  fixedOrder.push('anforderungen','deepdive');
 
-  // Tab-separated rows like the Confluence table
-  const rows=[header,''];
-  rows.push('Priorität\tThemen\tDauer\tReferent:in\tAnmerkungen');
-
-  slots.forEach(id=>{
-    if(id==='__agenda__'){
-      rows.push(`\t📓 Agenda-Planung\t\t\tfür die nächsten 2-3 Wochen; nur, wenn Agenda leer`);
-      return;
-    }
-    const sd=getSlot(id);if(sd.hidden)return;
-    const info=SLOTS[id];
-
-    // Build exact export name
-    let exportName=info.name;
-    if(id==='teamerfolg'&&sd.assigned&&sd.month) exportName=`🏆 Teamerfolg für den Monat ${sd.month}`;
-    else if(sd.assigned&&sd.topic) exportName=`${info.name.split(' ').slice(0,2).join(' ')} ${info.name.includes('Deep Dive')?'Deep Dive':''}: ${sd.topic}`.trim();
-    // For deepdive override cleanly
-    if(id==='deepdive'&&sd.assigned&&sd.topic) exportName=`🤿 Deep Dive: ${sd.topic}`;
-    if(id==='platzhalter'&&sd.assigned&&sd.topic) exportName=`▶️ ${sd.topic}`;
-
+  fixedOrder.forEach(id=>{
+    if(ws.hidden[id])return;
+    const info=FIXED_SLOTS[id];const sd=ws.slots[id]||{};
+    let name=info.name;
+    if(id==='deepdive'&&sd.assigned&&sd.topic)name=`🤿 Deep Dive: ${sd.topic}`;
+    if(id==='teamerfolg'&&sd.assigned&&sd.month)name=`🏆 Teamerfolg für den Monat ${sd.month}`;
     const ref=sd.assigned?(sd.ref||info.ref||''):(info.ref||'');
-    const notes=sd.assigned?sd.notes:'';
-    rows.push(`${info.prio}\t${exportName}\t${info.dur}\t${ref}\t${notes}`);
+    rows.push(`${info.prio}\t${name}\t${info.dur}\t${ref}\t${sd.notes||''}`);
   });
 
+  if(ws.monthlySlot&&!ws.hidden['__monthly__']){
+    const ms=MONTHLY_SLOTS.find(m=>m.id===ws.monthlySlot);
+    if(ms){const md=ws.monthlyData||{};
+      const name=md.topic?`${ms.exportName}: ${md.topic}`:ms.exportName;
+      rows.push(`2\t${name}\t${ms.dur}\t${md.ref||''}\t${md.notes||''}`);
+    }
+  }
+  rows.push(`\t📓 Agenda-Planung\t\t\tfür die nächsten 2-3 Wochen; nur, wenn Agenda leer`);
   return rows.join('\n');
 }
 
 function updatePreview(){document.getElementById('preview-text').textContent=buildText();}
-function togglePreview(){previewOpen=!previewOpen;const box=document.getElementById('preview-box');box.classList.toggle('visible',previewOpen);if(previewOpen)updatePreview();}
-
+function togglePreview(){previewOpen=!previewOpen;document.getElementById('preview-box').classList.toggle('visible',previewOpen);if(previewOpen)updatePreview();}
 function copyAgenda(){
   navigator.clipboard.writeText(buildText()).then(()=>{
-    const btn=document.getElementById('copy-btn');
-    btn.classList.add('success');btn.textContent='✓ Kopiert!';
+    const btn=document.getElementById('copy-btn');btn.classList.add('success');btn.textContent='✓ Kopiert!';
     setTimeout(()=>{btn.classList.remove('success');btn.innerHTML=`<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Agenda kopieren`;},2500);
   });
 }
-
 render();
 </script>
 </body>
