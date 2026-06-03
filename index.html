@@ -49,17 +49,13 @@
   .time-fill.warn { background: #E8921A; }
   .time-fill.over { background: var(--red); }
   .time-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); white-space: nowrap; }
-
-  /* Monthly slot picker */
   .monthly-section { margin-bottom: 1.5rem; }
-  .monthly-label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .monthly-label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
   .monthly-grid { display: flex; gap: 8px; flex-wrap: wrap; }
-  .monthly-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+  .monthly-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); cursor: pointer; transition: all 0.15s; }
   .monthly-btn:hover:not(.used):not(.active) { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
   .monthly-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
   .monthly-btn.used { background: var(--surface2); color: var(--text3); border-color: var(--border); cursor: not-allowed; text-decoration: line-through; }
-  .monthly-btn.used .used-label { font-size: 10px; color: var(--text3); margin-left: 2px; }
-
   .agenda-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
   .agenda-card-header { display: grid; grid-template-columns: 32px 1fr 90px 110px 36px; padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); }
   .agenda-card-header span { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -86,7 +82,6 @@
   .il-input::placeholder { color: var(--text3); }
   .il-save { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; padding: 4px 10px; background: var(--text); color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; }
   .il-save:hover { opacity: 0.8; }
-  .assigned-topic { font-size: 12px; color: var(--text2); margin-top: 2px; }
   .dur-cell { font-size: 11px; color: var(--text2); font-family: 'DM Mono', monospace; padding-top: 2px; }
   .ref-cell { font-size: 12px; color: var(--text2); padding-top: 2px; }
   .ref-cell.assigned { color: var(--text); font-weight: 500; }
@@ -102,10 +97,8 @@
   .btn-primary.success { background: var(--green); border-color: var(--green); }
   .btn-ghost { background: var(--surface); color: var(--text2); border-color: var(--border); }
   .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
-  .preview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-top: 1.5rem; display: none; }
-  .preview-box.visible { display: block; }
-  .preview-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-  .preview-text { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--text2); white-space: pre-wrap; line-height: 1.8; }
+  .copy-hint { font-size: 12px; color: var(--text2); margin-top: 10px; background: var(--accent-bg); border-radius: var(--radius-sm); padding: 8px 12px; display: none; }
+  .copy-hint.visible { display: block; }
   svg.icon { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
 </style>
 </head>
@@ -144,9 +137,8 @@
       <span class="time-num">45 Min. max</span>
     </div>
 
-    <!-- Monthly slot picker -->
     <div class="monthly-section">
-      <div class="monthly-label">Monatlicher Slot auswählen <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3);">(je 1× pro Monat)</span></div>
+      <div class="monthly-label">Monatlicher Slot <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3);">(je 1× pro Monat)</span></div>
       <div class="monthly-grid" id="monthly-grid"></div>
     </div>
 
@@ -162,14 +154,9 @@
         <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Agenda kopieren
       </button>
-      <button class="btn btn-ghost" onclick="togglePreview()">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        Vorschau
-      </button>
     </div>
-    <div class="preview-box" id="preview-box">
-      <div class="preview-label">Vorschau – exakt so wird es kopiert</div>
-      <div class="preview-text" id="preview-text"></div>
+    <div class="copy-hint" id="copy-hint">
+      ✅ Kopiert! Jetzt in Confluence die Stelle anklicken und <strong>Strg+V</strong> (Windows) bzw. <strong>⌘+V</strong> (Mac) drücken – die Tabelle wird direkt eingefügt.
     </div>
   </div>
 </div>
@@ -177,7 +164,6 @@
 <script>
 const HOLIDAYS={"2025-01-01":"Neujahr","2025-04-18":"Karfreitag","2025-04-21":"Ostermontag","2025-05-01":"Tag der Arbeit","2025-05-29":"Christi Himmelfahrt","2025-06-09":"Pfingstmontag","2025-06-19":"Fronleichnam","2025-10-03":"Tag der Deutschen Einheit","2025-11-01":"Allerheiligen","2025-12-25":"1. Weihnachtstag","2025-12-26":"2. Weihnachtstag","2026-01-01":"Neujahr","2026-04-03":"Karfreitag","2026-04-06":"Ostermontag","2026-05-01":"Tag der Arbeit","2026-05-14":"Christi Himmelfahrt","2026-05-25":"Pfingstmontag","2026-06-04":"Fronleichnam","2026-10-03":"Tag der Deutschen Einheit","2026-11-01":"Allerheiligen","2026-12-25":"1. Weihnachtstag","2026-12-26":"2. Weihnachtstag","2027-01-01":"Neujahr","2027-03-26":"Karfreitag","2027-03-29":"Ostermontag","2027-05-01":"Tag der Arbeit","2027-05-06":"Christi Himmelfahrt","2027-05-17":"Pfingstmontag","2027-05-27":"Fronleichnam","2027-10-03":"Tag der Deutschen Einheit","2027-11-01":"Allerheiligen","2027-12-25":"1. Weihnachtstag","2027-12-26":"2. Weihnachtstag"};
 const WORAN_ANCHOR=new Date('2026-06-11');
-
 function toKey(d){return d.toISOString().split('T')[0];}
 function monthKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
 function isHoliday(d){return HOLIDAYS[toKey(d)]||null;}
@@ -189,7 +175,6 @@ function getThursdaysInMonth(y,mo){const out=[];const d=new Date(y,mo,1);while(d
 function isTeamerfolg(d){const ts=getThursdaysInMonth(d.getFullYear(),d.getMonth());return ts.length>=2&&toKey(ts[1])===toKey(d);}
 function formatDateConfluence(d){const day=DAYS[d.getDay()];const dd=String(d.getDate()).padStart(2,'0');const mm=String(d.getMonth()+1).padStart(2,'0');const yy=String(d.getFullYear()).slice(2);return `${day}, ${dd}.${mm}.${yy} (KW ${getKW(d)})`;}
 
-// Fixed slots (always appear)
 const FIXED_SLOTS={
   woran:        {prio:1,name:'👩‍💼 Woran arbeitest Du gerade? (1 Thema) | Was ist die Herausforderung? | Was ist der Mehrwert am Ende?',dispName:'👩‍💼 Woran arbeitest Du gerade?',dur:'10-15 Min.',ref:'Alle',editable:false},
   eisbrecher:   {prio:1,name:'🎮 Eisbrecher-Game',dispName:'🎮 Eisbrecher-Game',dur:'10-15 Min.',ref:'Alle',editable:false},
@@ -197,31 +182,23 @@ const FIXED_SLOTS={
   anforderungen:{prio:1,name:'✨ Neue Anforderungen',dispName:'✨ Neue Anforderungen',dur:'5-10 Min.',ref:'Alle',editable:false},
   deepdive:     {prio:2,name:'🤿 Deep Dive',dispName:'🤿 Deep Dive',dur:'10 Min.',ref:'',editable:true},
 };
-
-// Monthly optional slots — one per month each
 const MONTHLY_SLOTS=[
   {id:'learning',  emoji:'💡',name:'Learning des Monats',   exportName:'💡 Learning des Monats',   dur:'ca. 10 Min.',prio:2},
   {id:'zukunft',   emoji:'🤖',name:'Zukunftsthemen',        exportName:'🤖 Zukunftsthemen',        dur:'10-15 Min.',prio:2},
   {id:'guest',     emoji:'👑',name:'Special Guest Deep Dive',exportName:'👑 Special Guest Deep Dive',dur:'5-10 Min.',prio:2},
-  {id:'scheiter',  emoji:'🎬',name:'Scheiter-Show',          exportName:'🎬 Scheiter-Show',          dur:'5-10 Min.',prio:2},
-  {id:'best',      emoji:'💎',name:'Best Practice',          exportName:'💎 Best Practice',          dur:'5-10 Min.',prio:2},
+  {id:'scheiter',  emoji:'🎬',name:'Scheiter-Show',          exportName:'🎬 Scheiter-Show',         dur:'5-10 Min.',prio:2},
+  {id:'best',      emoji:'💎',name:'Best Practice',          exportName:'💎 Best Practice',         dur:'5-10 Min.',prio:2},
 ];
 
-// localStorage helpers
 const LS_KEY='digi_jf_v1';
 function loadState(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}')}catch(e){return {};}}
 function saveState(s){try{localStorage.setItem(LS_KEY,JSON.stringify(s));}catch(e){}}
-
-// State: weekData[weekKey] = {mod, hidden:{}, slots:{}, monthlySlot: id|null, monthlyData:{topic,ref,notes}}
-// monthlyUsed[monthKey] = slotId  (which monthly slot was used this month)
 let state=loadState();
 function getWeekState(wk){if(!state[wk])state[wk]={mod:'',hidden:{},slots:{},monthlySlot:null,monthlyData:{topic:'',ref:'',notes:''}};return state[wk];}
 function getMonthlyUsed(mk){return state['_monthly_'+mk]||null;}
 function setMonthlyUsed(mk,slotId,wk){state['_monthly_'+mk]=slotId?{slotId,weekKey:wk}:null;saveState(state);}
 
 let cur=getNextThursday(new Date());
-let previewOpen=false;
-
 const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const MONTHS_S=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sept.','Okt.','Nov.','Dez.'];
 const DAYS=['So','Mo','Di','Mi','Do','Fr','Sa'];
@@ -229,201 +206,137 @@ const DAYS=['So','Mo','Di','Mi','Do','Fr','Sa'];
 function changeWeek(dir){cur=new Date(cur);cur.setDate(cur.getDate()+dir*7);render();}
 
 function selectMonthlySlot(slotId){
-  const wk=toKey(cur);const mk=monthKey(cur);
-  const ws=getWeekState(wk);
-  const used=getMonthlyUsed(mk);
-  // If already used in another week, don't allow
+  const wk=toKey(cur);const mk=monthKey(cur);const ws=getWeekState(wk);const used=getMonthlyUsed(mk);
   if(used&&used.weekKey!==wk&&used.slotId===slotId)return;
-  // Toggle: if already selected this week, deselect
-  if(ws.monthlySlot===slotId){
-    ws.monthlySlot=null;ws.monthlyData={topic:'',ref:'',notes:''};
-    setMonthlyUsed(mk,null,wk);
-  } else {
-    ws.monthlySlot=slotId;ws.monthlyData={topic:'',ref:'',notes:''};
-    setMonthlyUsed(mk,slotId,wk);
-  }
+  if(ws.monthlySlot===slotId){ws.monthlySlot=null;ws.monthlyData={topic:'',ref:'',notes:''};setMonthlyUsed(mk,null,wk);}
+  else{ws.monthlySlot=slotId;ws.monthlyData={topic:'',ref:'',notes:''};setMonthlyUsed(mk,slotId,wk);}
   saveState(state);render();
 }
-
 function saveMonthlyData(wk){
   const ws=getWeekState(wk);
   const t=document.getElementById('mt-topic');const r=document.getElementById('mt-ref');const n=document.getElementById('mt-notes');
-  if(t)ws.monthlyData.topic=t.value.trim();
-  if(r)ws.monthlyData.ref=r.value.trim();
-  if(n)ws.monthlyData.notes=n.value.trim();
+  if(t)ws.monthlyData.topic=t.value.trim();if(r)ws.monthlyData.ref=r.value.trim();if(n)ws.monthlyData.notes=n.value.trim();
   saveState(state);render();
 }
-
 function saveSlot(id){
   const wk=toKey(cur);const ws=getWeekState(wk);
-  const t=document.getElementById('it-'+id);const r=document.getElementById('ir-'+id);const n=document.getElementById('in-'+id);
-  const mo=document.getElementById('im-'+id);
+  const t=document.getElementById('it-'+id);const r=document.getElementById('ir-'+id);const n=document.getElementById('in-'+id);const mo=document.getElementById('im-'+id);
   if(!t||!t.value.trim()){if(t)t.focus();return;}
   ws.slots[id]={topic:t.value.trim(),ref:r?r.value.trim():'',notes:n?n.value.trim():'',month:mo?mo.value.trim():'',assigned:true};
   saveState(state);render();
 }
 function clearSlot(id){const wk=toKey(cur);const ws=getWeekState(wk);ws.slots[id]={assigned:false,topic:'',ref:'',notes:'',month:''};saveState(state);render();}
-function toggleHide(id){const wk=toKey(cur);const ws=getWeekState(wk);ws.hidden[id]=!ws.hidden[id];if(ws.hidden[id]){ws.slots[id]={assigned:false,topic:'',ref:'',notes:'',month:''};}saveState(state);render();}
+function clearMonthly(wk){const ws=getWeekState(wk);ws.monthlyData={topic:'',ref:'',notes:''};saveState(state);render();}
+function toggleHide(id){const wk=toKey(cur);const ws=getWeekState(wk);ws.hidden[id]=!ws.hidden[id];if(ws.hidden[id]&&id!=='__monthly__'){ws.slots[id]={assigned:false,topic:'',ref:'',notes:'',month:''};}saveState(state);render();}
 
 function render(){
-  const d=cur;const wk=toKey(d);const kw=getKW(d);const holiday=isHoliday(d);
-  const mk=monthKey(d);
-  const ws=getWeekState(wk);
-  const woran=isWoranWeek(d);const teamer=isTeamerfolg(d);
+  const d=cur;const wk=toKey(d);const mk=monthKey(d);const ws=getWeekState(wk);
+  const woran=isWoranWeek(d);const teamer=isTeamerfolg(d);const holiday=isHoliday(d);
   const thursdays=getThursdaysInMonth(d.getFullYear(),d.getMonth());
   const idx=thursdays.findIndex(t=>toKey(t)===wk);
-
-  document.getElementById('week-pill').innerHTML=
-    `${DAYS[d.getDay()]}, ${d.getDate()}. ${MONTHS_S[d.getMonth()]} ${d.getFullYear()} <span>KW ${kw}</span>`;
+  document.getElementById('week-pill').innerHTML=`${DAYS[d.getDay()]}, ${d.getDate()}. ${MONTHS_S[d.getMonth()]} ${d.getFullYear()} <span>KW ${getKW(d)}</span>`;
   document.getElementById('meta-bar').innerHTML=`
     <span class="meta-chip ${woran?'chip-woran':'chip-eis'}">${woran?'👩‍💼 Woran-Woche':'🎮 Eisbrecher-Woche'}</span>
     ${teamer?'<span class="meta-chip chip-teamer">🏆 Teamerfolg diese Woche</span>':''}
     <span class="meta-chip chip-info">Do ${idx+1} von ${thursdays.length} im ${MONTHS[d.getMonth()]}</span>`;
-
   const hb=document.getElementById('holiday-banner');const mc=document.getElementById('main-content');
   if(holiday){hb.style.display='flex';document.getElementById('holiday-name').textContent=holiday;mc.style.opacity='0.4';mc.style.pointerEvents='none';}
   else{hb.style.display='none';mc.style.opacity='1';mc.style.pointerEvents='';}
+  const modEl=document.getElementById('mod-input');modEl.value=ws.mod||'';modEl.oninput=e=>{ws.mod=e.target.value;saveState(state);};
 
-  const modEl=document.getElementById('mod-input');modEl.value=ws.mod||'';
-  modEl.oninput=e=>{ws.mod=e.target.value;saveState(state);};
-
-  // Render monthly slot picker
   const used=getMonthlyUsed(mk);
-  const grid=document.getElementById('monthly-grid');
-  grid.innerHTML=MONTHLY_SLOTS.map(ms=>{
+  document.getElementById('monthly-grid').innerHTML=MONTHLY_SLOTS.map(ms=>{
     const isActive=ws.monthlySlot===ms.id;
     const isUsedElsewhere=used&&used.slotId===ms.id&&used.weekKey!==wk;
-    let cls='monthly-btn';
-    if(isActive)cls+=' active';
-    else if(isUsedElsewhere)cls+=' used';
-    const usedLabel=isUsedElsewhere?`<span class="used-label">(bereits ${MONTHS_S[d.getMonth()]})</span>`:'';
-    return `<button class="${cls}" onclick="selectMonthlySlot('${ms.id}')" ${isUsedElsewhere?'disabled':''}>
-      ${ms.emoji} ${ms.name}${usedLabel}
-    </button>`;
+    let cls='monthly-btn'+(isActive?' active':isUsedElsewhere?' used':'');
+    return `<button class="${cls}" onclick="selectMonthlySlot('${ms.id}')" ${isUsedElsewhere?'disabled':''}>${ms.emoji} ${ms.name}${isUsedElsewhere?' (bereits geplant)':''}</button>`;
   }).join('');
 
-  // Build agenda rows
   const body=document.getElementById('agenda-body');body.innerHTML='';
   let total=0;
-
-  // Fixed slots order
-  const fixedOrder=[];
-  fixedOrder.push(woran?'woran':'eisbrecher');
+  const fixedOrder=[woran?'woran':'eisbrecher'];
   if(teamer)fixedOrder.push('teamerfolg');
   fixedOrder.push('anforderungen','deepdive');
-
   fixedOrder.forEach(id=>{
-    const info=FIXED_SLOTS[id];
-    const sd=ws.slots[id]||{assigned:false,topic:'',ref:'',notes:'',month:''};
-    const hidden=ws.hidden[id]||false;
+    const info=FIXED_SLOTS[id];const sd=ws.slots[id]||{assigned:false,topic:'',ref:'',notes:'',month:''};const hidden=ws.hidden[id]||false;
     if(!hidden)total+=parseDur(info.dur);
-    renderSlotRow(body,id,info.prio,info.dispName||info.name,info.dur,info.ref||'',info.editable||false,sd,hidden,wk,false);
+    renderSlotRow(body,id,info.prio,info.dispName,info.dur,info.ref||'',info.editable,sd,hidden,wk);
   });
-
-  // Monthly selected slot
   if(ws.monthlySlot){
     const ms=MONTHLY_SLOTS.find(m=>m.id===ws.monthlySlot);
-    if(ms){
-      const hidden=ws.hidden['__monthly__']||false;
-      if(!hidden)total+=parseDur(ms.dur);
-      const md=ws.monthlyData||{topic:'',ref:'',notes:''};
-      renderMonthlyRow(body,ms,md,hidden,wk);
-    }
+    if(ms){const hidden=ws.hidden['__monthly__']||false;if(!hidden)total+=parseDur(ms.dur);renderMonthlyRow(body,ms,ws.monthlyData||{},hidden,wk);}
   }
-
-  // Agenda row
   const agRow=document.createElement('div');agRow.className='slot-row agenda-row';
   agRow.innerHTML=`<div></div><div class="slot-content"><div class="slot-title" style="color:var(--text3);font-weight:400;">📓 Agenda-Planung</div><div class="slot-sub">nur wenn Agenda leer – für nächste 2–3 Wochen</div></div><div></div><div></div><div></div>`;
   body.appendChild(agRow);
-
   const pct=Math.min(Math.round((total/45)*100),100);
   const fill=document.getElementById('time-fill');fill.style.width=pct+'%';
   fill.className='time-fill'+(total>45?' over':total>38?' warn':'');
   document.getElementById('time-label').textContent=`ca. ${total} Min.`;
-  if(previewOpen)updatePreview();
 }
 
-function renderSlotRow(body,id,prio,dispName,dur,defaultRef,editable,sd,hidden,wk,isMonthly){
+function renderSlotRow(body,id,prio,dispName,dur,defaultRef,editable,sd,hidden,wk){
   let contentHTML='',refHTML='',actionHTML='';
   if(hidden){
-    contentHTML=`<div class="slot-title slot-hidden-label">${dispName} — ausgeblendet</div>`;
-    refHTML='<div></div>';
-    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Einblenden">👁</button>`;
+    contentHTML=`<div class="slot-title slot-hidden-label">${dispName} — ausgeblendet</div>`;refHTML='<div></div>';
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')">👁</button>`;
   } else if(sd.assigned){
-    const displayTitle=(id==='deepdive'&&sd.topic)?`${dispName}: ${sd.topic}`:(id==='teamerfolg'&&sd.month)?`${dispName} für den Monat ${sd.month}`:sd.topic?`${dispName}: ${sd.topic}`:dispName;
-    contentHTML=`<div class="slot-title">${displayTitle}</div>`;
-    if(sd.notes)contentHTML+=`<div class="slot-sub">${sd.notes}</div>`;
+    const t=(id==='deepdive'&&sd.topic)?`${dispName}: ${sd.topic}`:(id==='teamerfolg'&&sd.month)?`${dispName} für den Monat ${sd.month}`:sd.topic?`${dispName}: ${sd.topic}`:dispName;
+    contentHTML=`<div class="slot-title">${t}</div>${sd.notes?`<div class="slot-sub">${sd.notes}</div>`:''}`;
     refHTML=`<div class="ref-cell assigned">${sd.ref||defaultRef||'—'}</div>`;
-    actionHTML=`<button class="ic-btn del" onclick="clearSlot('${id}')" title="Entfernen">✕</button>
-      <button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+    actionHTML=`<button class="ic-btn del" onclick="clearSlot('${id}')">✕</button><button class="ic-btn" onclick="toggleHide('${id}')">🙈</button>`;
   } else if(editable){
-    const extraField=id==='teamerfolg'
+    const extra=id==='teamerfolg'
       ?`<input class="il-input ref-i" id="im-${id}" placeholder="Monat (z.B. Mai)" />`
-      :`<input class="il-input topic" id="it-${id}" placeholder="Thema…" />
-        <input class="il-input ref-i" id="ir-${id}" placeholder="Referent:in" />
-        <input class="il-input notes-i" id="in-${id}" placeholder="Anmerkungen" />`;
-    contentHTML=`<div class="slot-title">${dispName}</div>
-      <div class="inline-form">${extraField}<button class="il-save" onclick="saveSlot('${id}')">Eintragen</button></div>`;
+      :`<input class="il-input topic" id="it-${id}" placeholder="Thema…" /><input class="il-input ref-i" id="ir-${id}" placeholder="Referent:in" /><input class="il-input notes-i" id="in-${id}" placeholder="Anmerkungen" />`;
+    contentHTML=`<div class="slot-title">${dispName}</div><div class="inline-form">${extra}<button class="il-save" onclick="saveSlot('${id}')">Eintragen</button></div>`;
     refHTML=`<div class="ref-cell open">offen</div>`;
-    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')">🙈</button>`;
   } else {
-    contentHTML=`<div class="slot-title">${dispName}</div>`;
-    refHTML=`<div class="ref-cell">${defaultRef}</div>`;
-    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+    contentHTML=`<div class="slot-title">${dispName}</div>`;refHTML=`<div class="ref-cell">${defaultRef}</div>`;
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')">🙈</button>`;
   }
-  const row=document.createElement('div');
-  row.className=`slot-row p${prio}${hidden?' hidden-slot':''}`;
-  row.innerHTML=`<div><div class="prio-dot p${prio}">${prio}</div></div>
-    <div class="slot-content">${contentHTML}</div>
-    <div class="dur-cell">${hidden?'':dur}</div>
-    ${refHTML}
-    <div class="action-cell">${actionHTML}</div>`;
+  const row=document.createElement('div');row.className=`slot-row p${prio}${hidden?' hidden-slot':''}`;
+  row.innerHTML=`<div><div class="prio-dot p${prio}">${prio}</div></div><div class="slot-content">${contentHTML}</div><div class="dur-cell">${hidden?'':dur}</div>${refHTML}<div class="action-cell">${actionHTML}</div>`;
   body.appendChild(row);
 }
 
 function renderMonthlyRow(body,ms,md,hidden,wk){
   let contentHTML='',refHTML='',actionHTML='';
   if(hidden){
-    contentHTML=`<div class="slot-title slot-hidden-label">${ms.emoji} ${ms.name} — ausgeblendet</div>`;
-    refHTML='<div></div>';
-    actionHTML=`<button class="ic-btn" onclick="toggleHide('__monthly__')" title="Einblenden">👁</button>`;
+    contentHTML=`<div class="slot-title slot-hidden-label">${ms.emoji} ${ms.name} — ausgeblendet</div>`;refHTML='<div></div>';
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('__monthly__')">👁</button>`;
   } else if(md.topic||md.ref){
-    contentHTML=`<div class="slot-title">${ms.exportName}${md.topic?': '+md.topic:''}</div>`;
-    if(md.notes)contentHTML+=`<div class="slot-sub">${md.notes}</div>`;
+    contentHTML=`<div class="slot-title">${ms.exportName}${md.topic?': '+md.topic:''}</div>${md.notes?`<div class="slot-sub">${md.notes}</div>`:''}`;
     refHTML=`<div class="ref-cell assigned">${md.ref||'—'}</div>`;
-    actionHTML=`<button class="ic-btn del" onclick="clearMonthly('${wk}')" title="Entfernen">✕</button>
-      <button class="ic-btn" onclick="toggleHide('__monthly__')" title="Ausblenden">🙈</button>`;
+    actionHTML=`<button class="ic-btn del" onclick="clearMonthly('${wk}')">✕</button><button class="ic-btn" onclick="toggleHide('__monthly__')">🙈</button>`;
   } else {
-    contentHTML=`<div class="slot-title">${ms.exportName}</div>
-      <div class="inline-form">
-        <input class="il-input topic" id="mt-topic" placeholder="Thema (optional)…" />
-        <input class="il-input ref-i" id="mt-ref" placeholder="Referent:in" />
-        <input class="il-input notes-i" id="mt-notes" placeholder="Anmerkungen" />
-        <button class="il-save" onclick="saveMonthlyData('${wk}')">Eintragen</button>
-      </div>`;
+    contentHTML=`<div class="slot-title">${ms.exportName}</div><div class="inline-form">
+      <input class="il-input topic" id="mt-topic" placeholder="Thema (optional)…" />
+      <input class="il-input ref-i" id="mt-ref" placeholder="Referent:in" />
+      <input class="il-input notes-i" id="mt-notes" placeholder="Anmerkungen" />
+      <button class="il-save" onclick="saveMonthlyData('${wk}')">Eintragen</button></div>`;
     refHTML=`<div class="ref-cell open">offen</div>`;
-    actionHTML=`<button class="ic-btn" onclick="toggleHide('__monthly__')" title="Ausblenden">🙈</button>`;
+    actionHTML=`<button class="ic-btn" onclick="toggleHide('__monthly__')">🙈</button>`;
   }
-  const row=document.createElement('div');
-  row.className=`slot-row p2 monthly-active${hidden?' hidden-slot':''}`;
-  row.innerHTML=`<div><div class="prio-dot p2">2</div></div>
-    <div class="slot-content">${contentHTML}</div>
-    <div class="dur-cell">${hidden?'':ms.dur}</div>
-    ${refHTML}
-    <div class="action-cell">${actionHTML}</div>`;
+  const row=document.createElement('div');row.className=`slot-row p2 monthly-active${hidden?' hidden-slot':''}`;
+  row.innerHTML=`<div><div class="prio-dot p2">2</div></div><div class="slot-content">${contentHTML}</div><div class="dur-cell">${hidden?'':ms.dur}</div>${refHTML}<div class="action-cell">${actionHTML}</div>`;
   body.appendChild(row);
 }
 
-function clearMonthly(wk){
-  const ws=getWeekState(wk);ws.monthlyData={topic:'',ref:'',notes:''};saveState(state);render();
-}
-
-function buildText(){
+// Build HTML table for Confluence clipboard paste
+function buildHTMLTable(){
   const d=cur;const wk=toKey(d);const ws=getWeekState(wk);
-  let rows=[`${formatDateConfluence(d)} - Moderation: ${ws.mod||'___'}`,'','Priorität\tThemen\tDauer\tReferent:in\tAnmerkungen'];
   const woran=isWoranWeek(d);const teamer=isTeamerfolg(d);
-  const fixedOrder=[];
-  fixedOrder.push(woran?'woran':'eisbrecher');
+
+  // Header row — Confluence blue style matching screenshot
+  const headerStyle='background-color:#1868DB;color:#FFFFFF;font-weight:bold;padding:8px 12px;text-align:center;border:1px solid #1868DB;font-size:14px;';
+  const cellStyle='padding:8px 12px;border:1px solid #ddd;vertical-align:top;font-size:14px;background-color:#FFFFFF;';
+  const agendaStyle='padding:8px 12px;border:1px solid #ddd;color:#888;font-style:italic;vertical-align:top;font-size:14px;background-color:#FFFFFF;';
+
+  let rows=[];
+
+  const fixedOrder=[woran?'woran':'eisbrecher'];
   if(teamer)fixedOrder.push('teamerfolg');
   fixedOrder.push('anforderungen','deepdive');
 
@@ -434,28 +347,73 @@ function buildText(){
     if(id==='deepdive'&&sd.assigned&&sd.topic)name=`🤿 Deep Dive: ${sd.topic}`;
     if(id==='teamerfolg'&&sd.assigned&&sd.month)name=`🏆 Teamerfolg für den Monat ${sd.month}`;
     const ref=sd.assigned?(sd.ref||info.ref||''):(info.ref||'');
-    rows.push(`${info.prio}\t${name}\t${info.dur}\t${ref}\t${sd.notes||''}`);
+    const notes=sd.notes||'';
+    rows.push(`<tr>
+      <td style="${cellStyle}text-align:center;">${info.prio}</td>
+      <td style="${cellStyle}">${name}</td>
+      <td style="${cellStyle}text-align:center;">${info.dur}</td>
+      <td style="${cellStyle}text-align:center;">${ref}</td>
+      <td style="${cellStyle}">${notes}</td>
+    </tr>`);
   });
 
   if(ws.monthlySlot&&!ws.hidden['__monthly__']){
     const ms=MONTHLY_SLOTS.find(m=>m.id===ws.monthlySlot);
     if(ms){const md=ws.monthlyData||{};
       const name=md.topic?`${ms.exportName}: ${md.topic}`:ms.exportName;
-      rows.push(`2\t${name}\t${ms.dur}\t${md.ref||''}\t${md.notes||''}`);
+      rows.push(`<tr>
+        <td style="${cellStyle}text-align:center;">2</td>
+        <td style="${cellStyle}">${name}</td>
+        <td style="${cellStyle}text-align:center;">${ms.dur}</td>
+        <td style="${cellStyle}text-align:center;">${md.ref||''}</td>
+        <td style="${cellStyle}">${md.notes||''}</td>
+      </tr>`);
     }
   }
-  rows.push(`\t📓 Agenda-Planung\t\t\tfür die nächsten 2-3 Wochen; nur, wenn Agenda leer`);
-  return rows.join('\n');
+
+  // Agenda-Planung row
+  rows.push(`<tr>
+    <td style="${cellStyle}"></td>
+    <td style="${cellStyle}">📓 Agenda-Planung</td>
+    <td style="${cellStyle}"></td>
+    <td style="${cellStyle}"></td>
+    <td style="${agendaStyle}">für die nächsten 2-3 Wochen; nur, wenn Agenda leer</td>
+  </tr>`);
+
+  const title=`${formatDateConfluence(d)} - Moderation: ${ws.mod||'___'}`;
+
+  const coloredRows=rows.map((row,i)=>{const bg=i%2===0?'#FFFFFF':'#F4F5F7';return row.replace('<tr>',`<tr style="background-color:${bg};">`)});
+  return `<p><strong>${title}</strong></p>
+<table class="confluenceTable" data-table-width="100%" style="border-collapse:collapse;width:100%;font-family:Arial,sans-serif;">
+  <colgroup><col style="width:60px;"/><col/><col style="width:90px;"/><col style="width:110px;"/><col/></colgroup>
+  <thead><tr>
+    <th class="confluenceTh" style="${headerStyle}">Priorität</th>
+    <th class="confluenceTh" style="${headerStyle}">Themen</th>
+    <th class="confluenceTh" style="${headerStyle}">Dauer</th>
+    <th class="confluenceTh" style="${headerStyle}">Referent:in</th>
+    <th class="confluenceTh" style="${headerStyle}">Anmerkungen</th>
+  </tr></thead>
+  <tbody>${coloredRows.join('')}</tbody>
+</table>`;
 }
 
-function updatePreview(){document.getElementById('preview-text').textContent=buildText();}
-function togglePreview(){previewOpen=!previewOpen;document.getElementById('preview-box').classList.toggle('visible',previewOpen);if(previewOpen)updatePreview();}
 function copyAgenda(){
-  navigator.clipboard.writeText(buildText()).then(()=>{
-    const btn=document.getElementById('copy-btn');btn.classList.add('success');btn.textContent='✓ Kopiert!';
-    setTimeout(()=>{btn.classList.remove('success');btn.innerHTML=`<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Agenda kopieren`;},2500);
+  const html=buildHTMLTable();
+  // Copy both HTML and plain text to clipboard
+  const blob=new Blob([html],{type:'text/html'});
+  const item=new ClipboardItem({'text/html':blob});
+  navigator.clipboard.write([item]).then(()=>{
+    const btn=document.getElementById('copy-btn');
+    btn.classList.add('success');btn.textContent='✓ Kopiert!';
+    document.getElementById('copy-hint').classList.add('visible');
+    setTimeout(()=>{btn.classList.remove('success');btn.innerHTML=`<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Agenda kopieren`;},3000);
+  }).catch(()=>{
+    // Fallback: plain text
+    const d=cur;const wk=toKey(d);const ws=getWeekState(wk);
+    alert('HTML-Kopieren nicht unterstützt. Bitte Chrome oder Edge verwenden.');
   });
 }
+
 render();
 </script>
 </body>
