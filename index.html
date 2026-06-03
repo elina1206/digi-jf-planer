@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digi JF – Agenda Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #EFEDE8; --border: #E0DDD7; --border2: #CCC9C2;
+    --text: #1A1916; --text2: #6B6860; --text3: #A09D97;
+    --accent: #2D5BE3; --accent-bg: #EEF2FD;
+    --green: #1A7A4A; --green-bg: #EAF5EE;
+    --amber: #8A5A00; --amber-bg: #FEF3DC;
+    --red: #C0392B; --red-bg: #FDECEA;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .shell { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .header { margin-bottom: 2rem; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+  .brand h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.4px; }
+  .brand p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .week-nav { display: flex; align-items: center; gap: 8px; }
+  .nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text2); transition: all 0.15s; }
+  .nav-btn:hover { border-color: var(--border2); color: var(--text); }
+  .week-pill { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; font-size: 13px; font-weight: 500; white-space: nowrap; min-width: 170px; text-align: center; }
+  .week-pill span { color: var(--text2); font-weight: 400; margin-left: 4px; font-family: 'DM Mono', monospace; font-size: 11px; }
+  .meta-bar { display: flex; align-items: center; gap: 10px; margin-top: 1.25rem; flex-wrap: wrap; }
+  .meta-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; }
+  .chip-woran { background: var(--accent-bg); color: var(--accent); }
+  .chip-eis { background: #F0EEFE; color: #5A3FC0; }
+  .chip-teamer { background: var(--amber-bg); color: var(--amber); }
+  .chip-info { background: var(--surface2); color: var(--text2); font-weight: 400; }
+  .holiday-banner { background: var(--amber-bg); border: 1px solid #F0D080; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: var(--amber); display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; }
+  .mod-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .mod-label { font-size: 13px; color: var(--text2); white-space: nowrap; }
+  .mod-input { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); width: 200px; }
+  .mod-input:focus { outline: none; border-color: var(--accent); }
+  .mod-input::placeholder { color: var(--text3); }
+  .time-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+  .time-label { font-size: 12px; color: var(--text2); white-space: nowrap; }
+  .time-track { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .time-fill { height: 5px; border-radius: 3px; background: var(--accent); transition: width 0.4s ease; }
+  .time-fill.warn { background: #E8921A; }
+  .time-fill.over { background: var(--red); }
+  .time-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text2); white-space: nowrap; }
+  .agenda-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
+  .agenda-card-header { display: grid; grid-template-columns: 32px 1fr 90px 110px 36px; padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .agenda-card-header span { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .slot-row { display: grid; grid-template-columns: 32px 1fr 90px 110px 36px; padding: 10px 12px; border-bottom: 1px solid var(--border); align-items: start; }
+  .slot-row:last-child { border-bottom: none; }
+  .slot-row.p1 { background: var(--surface); }
+  .slot-row.p2 { background: #FAFAF8; }
+  .slot-row.hidden-slot { opacity: 0.3; }
+  .slot-row.agenda-row { background: var(--surface2); }
+  .prio-dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; margin-top: 1px; }
+  .prio-dot.p1 { background: var(--accent-bg); color: var(--accent); }
+  .prio-dot.p2 { background: var(--green-bg); color: var(--green); }
+  .slot-content { padding-right: 8px; }
+  .slot-title { font-size: 13px; font-weight: 500; line-height: 1.4; }
+  .slot-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .slot-hidden-label { font-size: 11px; color: var(--text3); font-style: italic; }
+  .inline-form { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .il-input { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); }
+  .il-input.topic { width: 155px; }
+  .il-input.ref-i { width: 85px; }
+  .il-input.notes-i { width: 130px; }
+  .il-input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+  .il-input::placeholder { color: var(--text3); }
+  .il-save { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; padding: 4px 10px; background: var(--text); color: #fff; border: none; border-radius: var(--radius-sm); cursor: pointer; }
+  .il-save:hover { opacity: 0.8; }
+  .assigned-topic { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .dur-cell { font-size: 11px; color: var(--text2); font-family: 'DM Mono', monospace; padding-top: 2px; }
+  .ref-cell { font-size: 12px; color: var(--text2); padding-top: 2px; }
+  .ref-cell.assigned { color: var(--text); font-weight: 500; }
+  .ref-cell.open { color: #C07000; font-style: italic; }
+  .action-cell { display: flex; flex-direction: column; gap: 3px; align-items: center; padding-top: 1px; }
+  .ic-btn { background: none; border: none; cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--text3); font-size: 13px; transition: all 0.1s; }
+  .ic-btn:hover { background: var(--surface2); color: var(--text2); }
+  .ic-btn.del:hover { background: var(--red-bg); color: var(--red); }
+  .bottom-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; border: 1px solid transparent; }
+  .btn-primary { background: var(--text); color: #fff; border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary.success { background: var(--green); border-color: var(--green); }
+  .btn-ghost { background: var(--surface); color: var(--text2); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+  .preview-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-top: 1.5rem; display: none; }
+  .preview-box.visible { display: block; }
+  .preview-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .preview-text { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--text2); white-space: pre-wrap; line-height: 1.8; }
+  .notes-col { font-size: 12px; color: var(--text2); padding-top: 2px; font-style: italic; }
+  svg.icon { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <div>
+          <h1>Digi JF Agenda Generator</h1>
+          <p>Woche auswählen · Agenda generieren · In Confluence einfügen</p>
+        </div>
+      </div>
+      <div class="week-nav">
+        <button class="nav-btn" onclick="changeWeek(-1)">&#8249;</button>
+        <div class="week-pill" id="week-pill">– <span></span></div>
+        <button class="nav-btn" onclick="changeWeek(1)">&#8250;</button>
+      </div>
+    </div>
+    <div class="meta-bar" id="meta-bar"></div>
+  </div>
+
+  <div id="holiday-banner" class="holiday-banner" style="display:none;">
+    ⚠️ <strong id="holiday-name"></strong> – kein Digi JF diese Woche.
+  </div>
+
+  <div id="main-content">
+    <div class="mod-row">
+      <span class="mod-label">Moderation:</span>
+      <input class="mod-input" id="mod-input" type="text" placeholder="Name eintragen…" />
+    </div>
+    <div class="time-row">
+      <span class="time-label" id="time-label">0 Min.</span>
+      <div class="time-track"><div class="time-fill" id="time-fill" style="width:0%"></div></div>
+      <span class="time-num">45 Min. max</span>
+    </div>
+
+    <div class="agenda-card">
+      <div class="agenda-card-header">
+        <span>Prio</span><span>Thema</span><span>Dauer</span><span>Referent:in</span><span></span>
+      </div>
+      <div id="agenda-body"></div>
+    </div>
+
+    <div class="bottom-bar">
+      <button class="btn btn-primary" id="copy-btn" onclick="copyAgenda()">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Agenda kopieren
+      </button>
+      <button class="btn btn-ghost" onclick="togglePreview()">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Vorschau
+      </button>
+    </div>
+
+    <div class="preview-box" id="preview-box">
+      <div class="preview-label">Vorschau – exakt so wird es kopiert</div>
+      <div class="preview-text" id="preview-text"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const HOLIDAYS={"2025-01-01":"Neujahr","2025-04-18":"Karfreitag","2025-04-21":"Ostermontag","2025-05-01":"Tag der Arbeit","2025-05-29":"Christi Himmelfahrt","2025-06-09":"Pfingstmontag","2025-06-19":"Fronleichnam","2025-10-03":"Tag der Deutschen Einheit","2025-11-01":"Allerheiligen","2025-12-25":"1. Weihnachtstag","2025-12-26":"2. Weihnachtstag","2026-01-01":"Neujahr","2026-04-03":"Karfreitag","2026-04-06":"Ostermontag","2026-05-01":"Tag der Arbeit","2026-05-14":"Christi Himmelfahrt","2026-05-25":"Pfingstmontag","2026-06-04":"Fronleichnam","2026-10-03":"Tag der Deutschen Einheit","2026-11-01":"Allerheiligen","2026-12-25":"1. Weihnachtstag","2026-12-26":"2. Weihnachtstag","2027-01-01":"Neujahr","2027-03-26":"Karfreitag","2027-03-29":"Ostermontag","2027-05-01":"Tag der Arbeit","2027-05-06":"Christi Himmelfahrt","2027-05-17":"Pfingstmontag","2027-05-27":"Fronleichnam","2027-10-03":"Tag der Deutschen Einheit","2027-11-01":"Allerheiligen","2027-12-25":"1. Weihnachtstag","2027-12-26":"2. Weihnachtstag"};
+const WORAN_ANCHOR=new Date('2026-06-11');
+function toKey(d){return d.toISOString().split('T')[0];}
+function isHoliday(d){return HOLIDAYS[toKey(d)]||null;}
+function isWoranWeek(d){return Math.round((d-WORAN_ANCHOR)/(7*24*3600*1000))%2===0;}
+function getKW(d){const j=new Date(d.getFullYear(),0,4);const s=new Date(j);s.setDate(j.getDate()-((j.getDay()+6)%7));return Math.floor((d-s)/(7*86400000))+1;}
+function getNextThursday(from){const d=new Date(from);d.setHours(0,0,0,0);const diff=(4-d.getDay()+7)%7;d.setDate(d.getDate()+(diff===0?0:diff));return d;}
+function parseDur(s){if(!s)return 10;const m=s.match(/(\d+)/g);if(m&&m.length>=2)return Math.round((parseInt(m[0])+parseInt(m[1]))/2);if(m)return parseInt(m[0]);return 10;}
+function getThursdaysInMonth(y,mo){const out=[];const d=new Date(y,mo,1);while(d.getDay()!==4)d.setDate(d.getDate()+1);while(d.getMonth()===mo){if(!HOLIDAYS[toKey(d)])out.push(new Date(d));d.setDate(d.getDate()+7);}return out;}
+function isTeamerfolg(d){const ts=getThursdaysInMonth(d.getFullYear(),d.getMonth());return ts.length>=2&&toKey(ts[1])===toKey(d);}
+
+// Slot definitions — export text matches Confluence format exactly
+const SLOTS={
+  woran:        {prio:1, name:'👩‍💼 Woran arbeitest Du gerade? (1 Thema) | Was ist die Herausforderung? | Was ist der Mehrwert am Ende?', dur:'10-15 Min.', ref:'Alle', note:'', editable:false},
+  eisbrecher:   {prio:1, name:'🎮 Eisbrecher-Game', dur:'10-15 Min.', ref:'Alle', note:'', editable:false},
+  teamerfolg:   {prio:1, name:'🏆 Teamerfolg', dur:'10-15 Min.', ref:'Alle', note:'', editable:false, hasMonth:true},
+  anforderungen:{prio:1, name:'✨ Neue Anforderungen', dur:'5-10 Min.', ref:'Alle', note:'', editable:false},
+  deepdive:     {prio:2, name:'🤿 Deep Dive', dur:'10 Min.', ref:'', note:'', editable:true},
+  platzhalter:  {prio:2, name:'▶️ Platzhalter für Zukunftsthemen / Special Guest / Scheiter-Show / Learning des Monats / Best Practice', dur:'ca. 10 Min.', ref:'', note:'', editable:true},
+};
+
+// Display names (shorter, for the tool UI only)
+const SLOT_DISPLAY={
+  woran:'👩‍💼 Woran arbeitest Du gerade?',
+  eisbrecher:'🎮 Eisbrecher-Game',
+  teamerfolg:'🏆 Teamerfolg',
+  anforderungen:'✨ Neue Anforderungen',
+  deepdive:'🤿 Deep Dive',
+  platzhalter:'▶️ Platzhalter',
+};
+
+function getSlotsForDate(d){
+  const s=[];
+  s.push(isWoranWeek(d)?'woran':'eisbrecher');
+  if(isTeamerfolg(d))s.push('teamerfolg');
+  s.push('anforderungen','deepdive','platzhalter','__agenda__');
+  return s;
+}
+
+let cur=getNextThursday(new Date());
+let slotData={};
+let moderator='';
+let previewOpen=false;
+
+function getSlot(id){if(!slotData[id])slotData[id]={topic:'',ref:'',notes:'',assigned:false,hidden:false,month:''};return slotData[id];}
+
+function changeWeek(dir){
+  cur=new Date(cur);cur.setDate(cur.getDate()+dir*7);
+  slotData={};moderator='';
+  render();
+}
+
+const MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MONTHS_S=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sept.','Okt.','Nov.','Dez.'];
+const DAYS=['So','Mo','Di','Mi','Do','Fr','Sa'];
+
+// Format date exactly like Confluence: "Donnerstag, 10.06.26 (KW 24)"
+function formatDateConfluence(d){
+  const day=DAYS[d.getDay()];
+  const dd=String(d.getDate()).padStart(2,'0');
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const yy=String(d.getFullYear()).slice(2);
+  const kw=getKW(d);
+  return `${day}, ${dd}.${mm}.${yy} (KW ${kw})`;
+}
+
+function saveSlot(id){
+  const t=document.getElementById('it-'+id);
+  const r=document.getElementById('ir-'+id);
+  const n=document.getElementById('in-'+id);
+  const mo=document.getElementById('im-'+id);
+  if(!t||!t.value.trim()){if(t)t.focus();return;}
+  slotData[id]={topic:t.value.trim(),ref:r?r.value.trim():'',notes:n?n.value.trim():'',assigned:true,hidden:false,month:mo?mo.value.trim():''};
+  render();
+}
+function clearSlot(id){slotData[id]={topic:'',ref:'',notes:'',assigned:false,hidden:false,month:''};render();}
+function toggleHide(id){const sd=getSlot(id);if(sd.hidden){sd.hidden=false;}else{sd.hidden=true;sd.assigned=false;sd.topic='';sd.ref='';sd.notes='';sd.month='';}render();}
+
+function render(){
+  const d=cur;const key=toKey(d);const kw=getKW(d);const holiday=isHoliday(d);
+  const woran=isWoranWeek(d);const teamer=isTeamerfolg(d);
+  const thursdays=getThursdaysInMonth(d.getFullYear(),d.getMonth());
+  const idx=thursdays.findIndex(t=>toKey(t)===key);
+
+  document.getElementById('week-pill').innerHTML=
+    `${DAYS[d.getDay()]}, ${d.getDate()}. ${MONTHS_S[d.getMonth()]} ${d.getFullYear()} <span>KW ${kw}</span>`;
+
+  document.getElementById('meta-bar').innerHTML=`
+    <span class="meta-chip ${woran?'chip-woran':'chip-eis'}">${woran?'👩‍💼 Woran-Woche':'🎮 Eisbrecher-Woche'}</span>
+    ${teamer?'<span class="meta-chip chip-teamer">🏆 Teamerfolg diese Woche</span>':''}
+    <span class="meta-chip chip-info">Do ${idx+1} von ${thursdays.length} im ${MONTHS[d.getMonth()]}</span>
+  `;
+
+  const hb=document.getElementById('holiday-banner');const mc=document.getElementById('main-content');
+  if(holiday){hb.style.display='flex';document.getElementById('holiday-name').textContent=holiday;mc.style.opacity='0.4';mc.style.pointerEvents='none';}
+  else{hb.style.display='none';mc.style.opacity='1';mc.style.pointerEvents='';}
+
+  const modEl=document.getElementById('mod-input');modEl.value=moderator;modEl.oninput=e=>{moderator=e.target.value;};
+
+  const slots=getSlotsForDate(d);
+  const body=document.getElementById('agenda-body');body.innerHTML='';
+  let total=0;
+
+  slots.forEach(id=>{
+    if(id==='__agenda__'){
+      const row=document.createElement('div');row.className='slot-row agenda-row';
+      row.innerHTML=`<div></div><div class="slot-content"><div class="slot-title" style="color:var(--text3);font-weight:400;">📓 Agenda-Planung</div><div class="slot-sub">nur wenn Agenda leer – für nächste 2–3 Wochen</div></div><div></div><div></div><div></div>`;
+      body.appendChild(row);return;
+    }
+    const info=SLOTS[id];const sd=getSlot(id);
+    if(!sd.hidden)total+=parseDur(info.dur);
+
+    let contentHTML='',refHTML='',actionHTML='';
+    const dispName=SLOT_DISPLAY[id];
+
+    if(sd.hidden){
+      contentHTML=`<div class="slot-title slot-hidden-label">${dispName} — ausgeblendet</div>`;
+      refHTML='<div></div>';
+      actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Einblenden">👁</button>`;
+    } else if(sd.assigned){
+      // show full export name + topic for teamerfolg/deepdive
+      const displayFull = (id==='teamerfolg'&&sd.month) ? `${dispName} für den Monat ${sd.month}` :
+                          (id==='deepdive'&&sd.topic) ? `${dispName}: ${sd.topic}` :
+                          sd.topic ? `${dispName}: ${sd.topic}` : dispName;
+      contentHTML=`<div class="slot-title">${displayFull}</div>`;
+      if(sd.notes)contentHTML+=`<div class="slot-sub">${sd.notes}</div>`;
+      refHTML=`<div class="ref-cell assigned">${sd.ref||info.ref||'—'}</div>`;
+      actionHTML=`
+        <button class="ic-btn del" onclick="clearSlot('${id}')" title="Entfernen">✕</button>
+        <button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+    } else if(info.editable){
+      // Teamerfolg gets a "Monat" field; others get topic + ref + notes
+      const extraField = id==='teamerfolg'
+        ? `<input class="il-input ref-i" id="im-${id}" placeholder="Monat (z.B. Mai)" />`
+        : `<input class="il-input topic" id="it-${id}" placeholder="Thema…" />
+           <input class="il-input ref-i" id="ir-${id}" placeholder="Referent:in" />
+           <input class="il-input notes-i" id="in-${id}" placeholder="Anmerkungen" />`;
+      contentHTML=`<div class="slot-title">${dispName}</div><div class="slot-sub">${info.note||''}</div>
+        <div class="inline-form">${extraField}<button class="il-save" onclick="saveSlot('${id}')">Eintragen</button></div>`;
+      refHTML=`<div class="ref-cell open">offen</div>`;
+      actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+    } else {
+      contentHTML=`<div class="slot-title">${dispName}</div>`;
+      refHTML=`<div class="ref-cell">${info.ref||''}</div>`;
+      actionHTML=`<button class="ic-btn" onclick="toggleHide('${id}')" title="Ausblenden">🙈</button>`;
+    }
+
+    const row=document.createElement('div');
+    row.className=`slot-row p${info.prio}${sd.hidden?' hidden-slot':''}`;
+    row.innerHTML=`
+      <div><div class="prio-dot p${info.prio}">${info.prio}</div></div>
+      <div class="slot-content">${contentHTML}</div>
+      <div class="dur-cell">${sd.hidden?'':info.dur}</div>
+      ${refHTML}
+      <div class="action-cell">${actionHTML}</div>`;
+    body.appendChild(row);
+  });
+
+  const pct=Math.min(Math.round((total/45)*100),100);
+  const fill=document.getElementById('time-fill');fill.style.width=pct+'%';
+  fill.className='time-fill'+(total>45?' over':total>38?' warn':'');
+  document.getElementById('time-label').textContent=`ca. ${total} Min.`;
+  if(previewOpen)updatePreview();
+}
+
+// Build export text exactly matching Confluence format
+function buildText(){
+  const d=cur;
+  const header=`${formatDateConfluence(d)} - Moderation: ${moderator||'___'}`;
+  const slots=getSlotsForDate(d);
+
+  // Tab-separated rows like the Confluence table
+  const rows=[header,''];
+  rows.push('Priorität\tThemen\tDauer\tReferent:in\tAnmerkungen');
+
+  slots.forEach(id=>{
+    if(id==='__agenda__'){
+      rows.push(`\t📓 Agenda-Planung\t\t\tfür die nächsten 2-3 Wochen; nur, wenn Agenda leer`);
+      return;
+    }
+    const sd=getSlot(id);if(sd.hidden)return;
+    const info=SLOTS[id];
+
+    // Build exact export name
+    let exportName=info.name;
+    if(id==='teamerfolg'&&sd.assigned&&sd.month) exportName=`🏆 Teamerfolg für den Monat ${sd.month}`;
+    else if(sd.assigned&&sd.topic) exportName=`${info.name.split(' ').slice(0,2).join(' ')} ${info.name.includes('Deep Dive')?'Deep Dive':''}: ${sd.topic}`.trim();
+    // For deepdive override cleanly
+    if(id==='deepdive'&&sd.assigned&&sd.topic) exportName=`🤿 Deep Dive: ${sd.topic}`;
+    if(id==='platzhalter'&&sd.assigned&&sd.topic) exportName=`▶️ ${sd.topic}`;
+
+    const ref=sd.assigned?(sd.ref||info.ref||''):(info.ref||'');
+    const notes=sd.assigned?sd.notes:'';
+    rows.push(`${info.prio}\t${exportName}\t${info.dur}\t${ref}\t${notes}`);
+  });
+
+  return rows.join('\n');
+}
+
+function updatePreview(){document.getElementById('preview-text').textContent=buildText();}
+function togglePreview(){previewOpen=!previewOpen;const box=document.getElementById('preview-box');box.classList.toggle('visible',previewOpen);if(previewOpen)updatePreview();}
+
+function copyAgenda(){
+  navigator.clipboard.writeText(buildText()).then(()=>{
+    const btn=document.getElementById('copy-btn');
+    btn.classList.add('success');btn.textContent='✓ Kopiert!';
+    setTimeout(()=>{btn.classList.remove('success');btn.innerHTML=`<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Agenda kopieren`;},2500);
+  });
+}
+
+render();
+</script>
+</body>
+</html>
